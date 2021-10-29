@@ -1,6 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from 'react';
 import twitterLogo from './assets/twitter-logo.svg';
+import SelectCharacter from './Components/SelectCharacter';
 import './App.css';
 
 // Constants
@@ -9,6 +10,7 @@ const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState(null);
+  const [characterNFT, setCharacterNFT] = useState(null);
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -53,6 +55,29 @@ const App = () => {
     }
   };
 
+  const renderContent = () => {
+    if (!currentAccount) {
+      return (
+        <div className="connect-wallet-container">
+          <img
+            src="https://c.tenor.com/wCGHN40DXdsAAAAC/boku-no-hero-academia-my-hero-academia.gif"
+            alt="Boku no Hero Academia Gif"
+            height={300}
+          />
+          <button
+            className="cta-button connect-wallet-button"
+            onClick={connectWalletAction}
+          >
+            Connect Wallet To Get Started
+          </button>
+        </div>
+      );
+    }
+    if (currentAccount && !characterNFT) {
+      return <SelectCharacter setCharacterNFT={setCharacterNFT} />;
+    }
+  };
+
   useEffect(() => {
     checkIfWalletIsConnected();
   }, []);
@@ -63,20 +88,8 @@ const App = () => {
         <div className="header-container">
           <p className="header gradient-text">My Hero Academia Game</p>
           <p className="sub-text">Team up to become a hero!</p>
-          <div className="connect-wallet-container">
-            <img
-              src="https://c.tenor.com/wCGHN40DXdsAAAAC/boku-no-hero-academia-my-hero-academia.gif"
-              alt="Boku no Hero Academia Gif"
-	  		height={300}
-            />
-            <button
-              className="cta-button connect-wallet-button"
-              onClick={connectWalletAction}
-            >
-              Connect Wallet To Get Started
-            </button>
-          </div>
         </div>
+        {renderContent()}
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
           <a
