@@ -106,6 +106,15 @@
   font-weight: bold;
 }
 
+.gradient-text {
+  color: rgb(34, 193, 195);
+  color: linear-gradient(
+    10deg,
+    rgba(34, 193, 195, 1) 10%,
+    rgba(253, 187, 45, 1) 100%
+  );
+}
+
 /* KeyFrames */
 @-webkit-keyframes gradient-animation {
   0% {
