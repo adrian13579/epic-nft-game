@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
 import twitterLogo from './assets/twitter-logo.svg';
 import SelectCharacter from './Components/SelectCharacter';
+import LoadingIndicator from './Components/LoadingIndicator';
+import Arena from './Components/Arena';
 import './App.css';
 import { CONTRACT_ADDRESS, transformCharacterData } from './constants';
 import MyEpicGame from './utils/MyEpicGame.json';
@@ -14,6 +16,7 @@ const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 const App = () => {
   const [currentAccount, setCurrentAccount] = useState(null);
   const [characterNFT, setCharacterNFT] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const checkIfWalletIsConnected = async () => {
     try {
@@ -59,6 +62,9 @@ const App = () => {
   };
 
   const renderContent = () => {
+    if (isLoading) {
+      return <LoadingIndicator />;
+    }
     if (!currentAccount) {
       return (
         <div className="connect-wallet-container">
@@ -79,9 +85,15 @@ const App = () => {
     if (currentAccount && !characterNFT) {
       return <SelectCharacter setCharacterNFT={setCharacterNFT} />;
     }
+    if (currentAccount && characterNFT) {
+      return (
+        <Arena characterNFT={characterNFT} setCharacterNFT={setCharacterNFT} />
+      );
+    }
   };
 
   useEffect(() => {
+    setIsLoading(true);
     checkIfWalletIsConnected();
   }, []);
 
@@ -96,13 +108,15 @@ const App = () => {
         signer
       );
 
-      const txn = await gameContract.checkIfUserHasNFT();
-      if (txn.name) {
+      const characterNFT = await gameContract.checkIfUserHasNFT();
+      if (characterNFT.name) {
         console.log('User has character NFT');
-        setCharacterNFT(transformCharacterData(txn));
+        setCharacterNFT(transformCharacterData(characterNFT));
       } else {
         console.log('No character NFT found');
       }
+
+      setIsLoading(false);
     };
 
     if (currentAccount) {

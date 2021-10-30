@@ -7,7 +7,7 @@ const transformCharacterData = (characterData) => {
 		imageURI: characterData.imageURI,
 		hp: characterData.hp.toNumber(),
 		maxHp: characterData.maxHp.toNumber(),
-		attackDamage: characterData.attackDamage.toNumeber(),
+		attackDamage: characterData.attackDamage.toNumber(),
 	};
 };
 
