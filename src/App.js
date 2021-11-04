@@ -95,6 +95,7 @@ const App = () => {
   useEffect(() => {
     setIsLoading(true);
     checkIfWalletIsConnected();
+	setIsLoading(false);
   }, []);
 
   useEffect(() => {
